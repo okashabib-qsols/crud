@@ -14,12 +14,8 @@ if(empty($id)){
     $insert = $conn->query($query);
     if($insert){
         echo json_encode(['message'=>'Task created!', 'success' => true]);
-    }
-}else {
-    $query = "UPDATE tasks SET `title`='$title', `description`='$description', `status`='$status' WHERE `id`='$id'";
-    $update = $conn->query($query);
-    if($update){
-        echo json_encode(['message'=>'Task Updated!', 'success' => true]);
+    } else {
+        echo json_encode(['message' => "Error: " . mysqli_error($conn)]);
     }
 }
 ?>

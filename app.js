@@ -1,75 +1,104 @@
 $(document).ready(function(){
-    console.log("Hello DOM")
 
     $('#task-form').submit(function (e) { 
         e.preventDefault();
         let formData = $(this).serialize();
+        let taskId = $('#taskId').val();
 
-        $.ajax({
-            method: 'POST',
-            url: "./actions/task.php",
-            data: formData,
-            success: function (response) {
-                let res = JSON.parse(response)
-                if(res.success){
-                    Toastify({
-                        text: res.message,
-                        duration: 3000,
-                        stopOnFocus: true,
-                        position: "center",
-                        style: {
-                            borderRadius: "10px",
-                        },
-                        offset: {
-                            y: 50
-                        },
-                    }).showToast()
-                    $('#taskModal').modal('hide')
-                    $('.modal-backdrop').remove();
-                    $("#allTasks").load(location.href + ' #allTasks')
+        if(!taskId){            
+            $.ajax({
+                method: 'POST',
+                url: "./actions/task.php",
+                data: formData,
+                dataType: 'json',
+                success: function (response) {
+                    if(response.success){
+                        Toastify({
+                            text: response.message,
+                            duration: 3000,
+                            stopOnFocus: true,
+                            position: "center",
+                            style: {
+                                borderRadius: "10px",
+                            },
+                            offset: {
+                                y: 50
+                            },
+                        }).showToast()
+                        $('#taskModal').modal('hide')
+                        $('.modal-backdrop').remove();
+                        $("#allTasks").load(location.href + ' #allTasks')
+                    }
+                },
+                error: function (err){
+                    console.log(err, "Error");
                 }
+            });
+        }
 
-            },
-            error: function (err){
-                console.log(err, "Error");
-            }
-        });
+        if(taskId){
+            $.ajax({
+                method: 'PUT',
+                url: './actions/update.php?id='+taskId,
+                data: formData,
+                dataType: 'json',
+                success: function(response){
+                    if (response.success) {
+                        Toastify({
+                            text: response.message,
+                            duration: 3000,
+                            stopOnFocus: true,
+                            position: "center",
+                            style: {
+                                borderRadius: "10px",
+                            },
+                            offset: {
+                                y: 50
+                            },
+                        }).showToast();
+                        $('#taskModal').modal('hide');
+                        $('.modal-backdrop').remove();
+                        $("#allTasks").load(location.href + ' #allTasks');
+                    } else {
+                        console.log(response.message);
+                    }
+                }
+            })
+        }
     });
 
+    // GET SINGLE
     $('.editTask').click(function (e) { 
         e.preventDefault();
         let taskId = $(this).data('card-id')
-        console.log(taskId)
         $.ajax({
             method: 'GET',
             url: './actions/getTask.php',
             data: { id: taskId },
+            dataType: 'json',
             success: function(response){
-                let res = JSON.parse(response);
-                console.log(res)
-                $('#taskId').val(res.id)
-                $('#title').val(res.title)
-                $('#description').val(res.description)
-                $('#taskStatus').val(res.status)
-                
+                $('#taskId').val(response.id)
+                $('#title').val(response.title)
+                $('#description').val(response.description)
+                $('#taskStatus').val(response.status)
                 $('.modal-title').text("Edit Task")
                 $('#taskModal').modal('show')
             }
         })
     });
 
+    // DELETE
     $('.deleteTask').on('click', function() {
         let taskId = $(this).data('card-id');
         
         $.ajax({
-            method: 'GET',
-            url: './actions/delete.php',
-            data: { id: taskId },
+            method: 'DELETE',
+            url: './actions/delete.php?id='+taskId,
+            dataType: 'json',
             success: function(response){
-                let res = JSON.parse(response)
-                if(res.success){
+                if(response.success){
                     Toastify({
-                        text: res.message,
+                        text: response.message,
                         duration: 3000,
                         stopOnFocus: true,
                         position: "center",
