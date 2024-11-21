@@ -53,7 +53,7 @@ $get_data = mysqli_query($conn, $all_tasks);
                             <span class="input-group-text" id="inputGroup-sizing-sm">Title</span>
                             <input type="text" class="form-control" id="title" aria-label="Sizing example input" name="title" aria-describedby="inputGroup-sizing-sm">
                         </div>
-                        <div class="form-floating mb-2">
+                        <div class="form-floating mb-3">
                             <textarea class="form-control" placeholder="Leave a comment here" name="description" id="description"></textarea>
                             <label for="description">Description</label>
                         </div>
@@ -92,11 +92,11 @@ $get_data = mysqli_query($conn, $all_tasks);
             <div class="card-body">
                 <h5 class="card-title"><?= $title; ?></h5>
                 <p class="card-text"><?= $description; ?></p>
-                <span class="badge rounded-pill text-bg-primary"><?= $status; ?></span>
+                <span class="badge rounded-pill text-bg-primary badge-status"><?= $status; ?></span>
                 <hr>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                     <button class="btn btn-primary me-md-2 btn-sm badge rounded-pill editTask" type="button" data-card-id="<?php echo $id; ?>">Edit</button>
-                    <button class="btn btn-danger btn-sm badge rounded-pill deleteTask" type="button" data-card-id="<?php echo $id; ?>">Delete</button>
+                    <button class="btn btn-danger btn-sm badge rounded-pill deleteTask" title="Double click to delete" type="button" data-card-id="<?php echo $id; ?>">Delete</button>
                 </div>
             </div>
         </div>

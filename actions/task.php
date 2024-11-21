@@ -13,7 +13,13 @@ if(empty($id)){
     $query = "INSERT INTO tasks (title, description, status) VALUES ('$title', '$description', '$status')";
     $insert = $conn->query($query);
     if($insert){
-        echo json_encode(['message'=>'Task created!', 'success' => true]);
+        $data = [
+            'id' => $conn->insert_id,
+            'title' => $title,
+            'description' => $description,
+            'status' => $status
+        ];
+        echo json_encode([ 'data' => $data, 'message' => 'Task created!', 'success' => true ]);
     } else {
         echo json_encode(['message' => "Error: " . mysqli_error($conn)]);
     }

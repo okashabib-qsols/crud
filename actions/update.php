@@ -1,7 +1,7 @@
 <?php
 require '../DB/conn.php';
 
-$id = $_GET['id'];
+$id = $_POST['id'];
 $title = $_POST['title'];
 $description = $_POST['description'];
 $status = $_POST['status'];
@@ -12,7 +12,12 @@ if(mysqli_num_rows($exist_id) > 0){
     $query = "UPDATE tasks SET `title`='$title', `description`='$description', `status`='$status' WHERE `id`='$id'";
     $update = $conn->query($query);
     if($update){
-        echo json_encode(['message'=>'Task Updated!', 'success' => true]);
+        $data = [
+            'title' => $title,
+            'description' => $description,
+            'status' => $status
+        ];
+        echo json_encode([ 'data' => $data, 'message'=>'Task Updated!', 'success' => true]);
     } else {
         echo json_encode(['message' => "Error: " . mysqli_error($conn)]);
     }
